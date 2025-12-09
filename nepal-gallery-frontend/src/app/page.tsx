@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -10,6 +10,14 @@ import { Gallery } from '../type'; // Ensure this matches your types file
 import { FiCamera, FiVideo, FiEye } from 'react-icons/fi';
 
 export default function Home() {
+  return (
+    <Suspense fallback={<main className="p-4">Loading...</main>}>
+      <HomeContent />
+    </Suspense>
+  );
+}
+
+function HomeContent() {
   const [galleries, setGalleries] = useState<Gallery[]>([]);
   const [loading, setLoading] = useState(true);
   
