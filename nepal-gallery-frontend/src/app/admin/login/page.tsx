@@ -24,20 +24,12 @@ export default function AdminLogin() {
         password
       });
 
-      // 1. SAVE TOKEN AND ROLE
-      // We store the role so the Navbar knows to show/hide the "Upload" button
-      localStorage.setItem('adminToken', data.token);
-      localStorage.setItem('userRole', data.role);
+      // 1. SAVE TOKEN AND ROLE (all signed-up users can access dashboard)
+      localStorage.setItem('authToken', data.token);
+      localStorage.setItem('userRole', data.role || 'user');
       
-      // 2. ROLE-BASED REDIRECT
-      if (data.role === 'admin') {
-        // If Admin -> Go to Dashboard
-        router.push('/admin/dashboard');
-      } else {
-        // If Regular User -> Go to Home Page
-        alert("Login successful, but you are not an admin.");
-        router.push('/');
-      }
+      // 2. Redirect to dashboard for any authenticated user
+      router.push('/admin/dashboard');
       
     } catch (err: any) {
       setError(err.response?.data?.error || 'Invalid credentials');
@@ -55,7 +47,7 @@ export default function AdminLogin() {
           <h1 className="text-3xl font-bold text-[#e62e04] mb-2 tracking-tighter">
             X<span className="text-white">TUBE</span>
           </h1>
-          <p className="text-gray-400 text-sm">Restricted Access Area</p>
+          <p className="text-gray-400 text-sm">Access your account to upload</p>
         </div>
         
         <form onSubmit={handleLogin} className="space-y-6">

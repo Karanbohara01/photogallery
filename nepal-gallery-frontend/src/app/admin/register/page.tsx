@@ -33,7 +33,7 @@ export default function AdminRegister() {
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center text-white">
       <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-96 border border-gray-700">
-        <h1 className="text-2xl font-bold text-red-500 mb-6 text-center">Create Admin</h1>
+        <h1 className="text-2xl font-bold text-red-500 mb-6 text-center">Create Account</h1>
         
         <form onSubmit={handleRegister} className="space-y-4">
           <div>
@@ -57,7 +57,7 @@ export default function AdminRegister() {
             />
           </div>
           <button type="submit" className="w-full bg-red-600 hover:bg-red-700 p-2 rounded font-bold transition-colors">
-            Create Account
+            Sign Up
           </button>
         </form>
         

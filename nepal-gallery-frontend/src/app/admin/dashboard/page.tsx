@@ -21,7 +21,7 @@
 
 //   // Auth & Role Check
 //   useEffect(() => {
-//     const token = localStorage.getItem('adminToken');
+//     const token = localStorage.getItem('authToken');
 //     const role = localStorage.getItem('userRole');
 
 //     if (!token) {
@@ -73,7 +73,7 @@
 
 //     try {
 //       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-//       const token = localStorage.getItem('adminToken');
+//       const token = localStorage.getItem('authToken');
       
 //       await axios.delete(`${apiUrl}/galleries/${id}`, {
 //         headers: { Authorization: `Bearer ${token}` }
@@ -92,7 +92,7 @@
 
 //     try {
 //       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-//       const token = localStorage.getItem('adminToken');
+//       const token = localStorage.getItem('authToken');
 
 //       if (editingId) {
 //         // --- UPDATE MODE (PUT) ---
@@ -142,7 +142,7 @@
 //   };
 
 //   const handleLogout = () => {
-//     localStorage.removeItem('adminToken');
+//     localStorage.removeItem('authToken');
 //     localStorage.removeItem('userRole');
 //     router.push('/admin/login');
 //   };
@@ -362,16 +362,11 @@ export default function AdminDashboard() {
 
   // Auth Check
   useEffect(() => {
-    const token = localStorage.getItem('adminToken');
-    const role = localStorage.getItem('userRole');
-
+    const token = localStorage.getItem('authToken');
     if (!token) {
-        router.push('/admin/login');
-    } else if (role !== 'admin') {
-        alert("Access Denied: Admins Only");
-        router.push('/'); 
+      router.push('/admin/login');
     } else {
-        fetchGalleries();
+      fetchGalleries();
     }
   }, [router]);
 
@@ -408,7 +403,7 @@ export default function AdminDashboard() {
     if (!confirm('Are you sure you want to delete this?')) return;
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-      const token = localStorage.getItem('adminToken');
+      const token = localStorage.getItem('authToken');
       
       await axios.delete(`${apiUrl}/galleries/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -426,7 +421,7 @@ export default function AdminDashboard() {
 
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-      const token = localStorage.getItem('adminToken');
+      const token = localStorage.getItem('authToken');
 
       if (editingId) {
         // UPDATE logic (kept simple for now, updates usually don't re-upload files in basic MVPs)
@@ -474,7 +469,7 @@ export default function AdminDashboard() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('adminToken');
+    localStorage.removeItem('authToken');
     localStorage.removeItem('userRole');
     router.push('/admin/login');
   };

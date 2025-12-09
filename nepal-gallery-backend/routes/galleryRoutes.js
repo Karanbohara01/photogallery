@@ -52,7 +52,7 @@ router.route('/')
   .get(getGalleries) // Public: List all content
   .post(
     protect,              // 1. Check if logged in
-    authorize('admin'),   // 2. Check if role is 'admin'
+    authorize('admin', 'user'),   // 2. Allow any signed-in user role
     uploadFields,         // 3. Handle file uploads (images OR thumbnail)
     createGallery         // 4. Save to database
   );
@@ -61,13 +61,13 @@ router.route('/:id')
   .get(getGallery)        // Public: View single content
   .put(
     protect, 
-    authorize('admin'), 
-    updateGallery         // Admin: Edit details
+    authorize('admin', 'user'), 
+    updateGallery         // Any signed-in user: Edit details
   )
   .delete(
     protect, 
-    authorize('admin'), 
-    deleteGallery         // Admin: Delete content
+    authorize('admin', 'user'), 
+    deleteGallery         // Any signed-in user: Delete content
   );
 
 module.exports = router;

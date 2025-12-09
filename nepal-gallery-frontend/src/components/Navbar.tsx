@@ -92,23 +92,35 @@
 "use client";
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { FiMenu, FiSearch } from 'react-icons/fi';
 
 const Navbar = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const [searchTerm, setSearchTerm] = useState('');
   const [userRole, setUserRole] = useState<string | null>(null);
 
   // 1. Check User Role on Load
   useEffect(() => {
-    // We use window check to avoid server-side mismatch errors
-    if (typeof window !== 'undefined') {
-        const role = localStorage.getItem('userRole');
-        setUserRole(role);
-    }
+    const loadRole = () => {
+      if (typeof window === 'undefined') return;
+      const role = localStorage.getItem('userRole');
+      setUserRole(role);
+    };
+
+    loadRole(); // initial read
+    window.addEventListener('storage', loadRole);
+    return () => window.removeEventListener('storage', loadRole);
   }, []);
+
+  // Refresh role when navigating between pages (avoids stale value after login)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const role = localStorage.getItem('userRole');
+    setUserRole(role);
+  }, [pathname]);
 
   // 2. Handle Search
   const handleSearch = (e: React.FormEvent) => {
@@ -170,8 +182,8 @@ const Navbar = () => {
         {/* C. User / Upload Section */}
         <div className="flex items-center gap-4">
           
-          {/* UPLOAD Button (Only for Admins) */}
-          {userRole === 'admin' && (
+          {/* UPLOAD Button (Any signed-in user) */}
+          {userRole && (
             <Link 
               href="/admin/dashboard" 
               className="px-4 py-1.5 bg-[#e62e04] hover:bg-red-700 text-white text-xs font-bold uppercase rounded-sm transition-colors"
@@ -180,21 +192,29 @@ const Navbar = () => {
             </Link>
           )}
 
-          {/* Login / Logout */}
+          {/* Login / Logout / Register */}
           {userRole ? (
-             <button 
-               onClick={handleLogout}
-               className="text-sm font-bold text-gray-300 hover:text-white uppercase tracking-wide"
-             >
-               Logout
-             </button>
+            <button 
+              onClick={handleLogout}
+              className="text-sm font-bold text-gray-300 hover:text-white uppercase tracking-wide"
+            >
+              Logout
+            </button>
           ) : (
-             <Link 
-               href="/admin/login" 
-               className="text-sm font-bold text-gray-300 hover:text-white uppercase tracking-wide"
-             >
-               Login
-             </Link>
+            <>
+              <Link 
+                href="/admin/login" 
+                className="text-sm font-bold text-gray-300 hover:text-white uppercase tracking-wide"
+              >
+                Login
+              </Link>
+              <Link 
+                href="/admin/register" 
+                className="text-sm font-bold text-gray-300 hover:text-white uppercase tracking-wide"
+              >
+                Sign Up
+              </Link>
+            </>
           )}
         </div>
       </div>
