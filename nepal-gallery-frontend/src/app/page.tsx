@@ -66,7 +66,7 @@ function HomeContent() {
     <main className="p-4">
       
       {/* DYNAMIC HEADER */}
-      <div className="flex items-center justify-between mb-6 px-2 border-l-4 border-[#e62e04]">
+      <div className="flex items-center justify-between mb-5 px-2 border-l-4 border-[#e62e04]">
         <h1 className="text-xl md:text-2xl font-bold text-white uppercase tracking-tight">
           {search ? (
             <>Search Results: <span className="text-[#e62e04]">"{search}"</span></>
@@ -74,7 +74,7 @@ function HomeContent() {
             <>Newest <span className="text-[#e62e04]">Updates</span></>
           )}
         </h1>
-        <span className="text-xs text-gray-500">Page {page}</span>
+        <span className="text-xs text-gray-600">Page {page}</span>
       </div>
 
       {/* TOP AD BANNER */}

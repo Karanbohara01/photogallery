@@ -3,16 +3,22 @@ import Script from "next/script";
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <head>
+      <body>
+        {children}
+
+        {/* Ad Script */}
         <Script
-          strategy="afterInteractive"
-          src="https://ads.exoclick.com/ad-provider.js"
-          data-idzone="5794992"
-          data-sub=""
-          data-debug="false"
+          async
+          type="application/javascript"
+          src="https://a.magsrv.com/ad-provider.js"
         />
-      </head>
-      <body>{children}</body>
+
+        <ins className="eas6a97888e2" data-zoneid="5795068"></ins>
+
+        <Script id="ad-provider-init">
+          {`(AdProvider = window.AdProvider || []).push({ serve: {} });`}
+        </Script>
+      </body>
     </html>
   );
 }
