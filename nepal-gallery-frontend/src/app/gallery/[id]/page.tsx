@@ -17,7 +17,7 @@ export default function SingleGalleryPage() {
 
   // Helper: Get Image URL (Robust Version)
   const getImageUrl = (path: string) => {
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
     const SERVER_URL = API_URL.replace('/api', '');
     
     if (!path) return '/placeholder.jpg';
@@ -31,8 +31,7 @@ export default function SingleGalleryPage() {
   useEffect(() => {
     const fetchSingleGallery = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-        // We fetch the specific ID using the route we created in the Backend
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api';
         const { data } = await axios.get(`${apiUrl}/galleries/${id}`);
         
         setItem(data.data); 

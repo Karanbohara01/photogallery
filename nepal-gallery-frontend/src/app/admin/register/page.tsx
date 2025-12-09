@@ -15,7 +15,7 @@ export default function AdminRegister() {
     setStatus('Creating Admin...');
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api';
       
       await axios.post(`${apiUrl}/auth/register`, {
         username,

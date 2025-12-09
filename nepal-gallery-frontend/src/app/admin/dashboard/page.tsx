@@ -372,7 +372,7 @@ export default function AdminDashboard() {
 
   const fetchGalleries = async () => {
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api';
       const { data } = await axios.get(`${apiUrl}/galleries`);
       setGalleries(data.data);
     } catch (error) {
@@ -402,7 +402,7 @@ export default function AdminDashboard() {
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this?')) return;
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api';
       const token = localStorage.getItem('authToken');
       
       await axios.delete(`${apiUrl}/galleries/${id}`, {
@@ -420,7 +420,7 @@ export default function AdminDashboard() {
     setLoading(true);
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api';
       const token = localStorage.getItem('authToken');
 
       if (editingId) {

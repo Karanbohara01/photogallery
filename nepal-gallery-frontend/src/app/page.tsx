@@ -23,8 +23,8 @@ export default function Home() {
 
   const [totalPages, setTotalPages] = useState(1);
   
-  // Configuration
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+  // Configuration: use internal Next.js API on same domain
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
   const SERVER_URL = API_URL.replace('/api', '');
 
   // 2. FETCH DATA
