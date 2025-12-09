@@ -25,6 +25,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <meta name="google-site-verification" content="448eb6a033a3f15c065aa66755d3f5a8" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#0f0f0f] text-gray-100`}>
         
         {/* 1. Navigation Bar (Sticky Top) */}
