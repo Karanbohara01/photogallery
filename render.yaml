@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: nepal-gallery-backend
+    plan: free
+    env: node
+    region: oregon
+    rootDir: nepal-gallery-backend
+    buildCommand: npm install
+    startCommand: npm run start
+    autoDeploy: true
+    numInstances: 1
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: NODE_ENV
+        value: production
+
