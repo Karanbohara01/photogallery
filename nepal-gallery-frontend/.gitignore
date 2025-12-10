@@ -7,12 +7,13 @@ pnpm-lock.yaml
 # --- Environment Variables (CRITICAL) ---
 # Never push these to GitHub as they contain API keys and Database secrets
 .env
-.env.local
+#.env.local
 .env.development.local
 .env.test.local
 .env.production.local
 *.env
 *.env.*
+!.env.local
 
 # --- System & OS Files ---
 .DS_Store
@@ -54,7 +55,7 @@ next-env.d.ts
 coverage/
 .nyc_output/
 # If you use file uploads locally during dev
-uploads/
+/uploads/
 tmp/
 
 # --- Testing ---

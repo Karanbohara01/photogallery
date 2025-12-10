@@ -2,13 +2,17 @@
 
 /* Define your custom theme variables (Tube Colors) */
 @theme {
-  --color-tube-red: #e62e04;
+  --color-tube-red: #cc0000; /* Slightly darker, more premium red */
   --color-tube-black: #0f0f0f;
+  --color-tube-dark-gray: #1f1f1f;
+  --color-tube-light-gray: #f1f1f1;
 }
 
 body {
   background-color: var(--color-tube-black);
-  color: #f5f5f5;
+  color: #e5e5e5;
+  font-family: var(--font-geist-sans), sans-serif;
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 /* Custom Scrollbar */
@@ -16,7 +20,7 @@ body {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background: #121212;
 }
 ::-webkit-scrollbar-thumb {
   background: #333;
@@ -27,19 +31,29 @@ body {
 }
 
 /* Tube-style Button Base */
-/* We use standard CSS here to prevent @apply errors during the v4 build */
 .btn-tube {
-  padding: 0.5rem 1rem; /* px-4 py-2 */
-  background-color: #222;
+  padding: 0.5rem 1.25rem;
+  background-color: #262626;
   color: white;
-  font-size: 0.875rem; /* text-sm */
-  font-weight: 700; /* font-bold */
+  font-size: 0.875rem; 
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em; /* tracking-wider */
-  transition: background-color 200ms;
-  border-radius: 2px;
+  letter-spacing: 0.05em;
+  transition: all 0.2s ease-in-out;
+  border-radius: 4px;
+  border: 1px solid transparent;
 }
 
 .btn-tube:hover {
   background-color: var(--color-tube-red);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Glassmorphism Utility */
+.glass {
+  background: rgba(15, 15, 15, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }

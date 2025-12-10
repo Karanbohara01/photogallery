@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '../../../lib/db';
 import { Gallery } from '../../../lib/models/Gallery';
 import jwt from 'jsonwebtoken';
+import fs from 'fs';
+import path from 'path';
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
@@ -64,6 +66,7 @@ export async function GET(req: NextRequest) {
 
 // POST /api/galleries
 // NOTE: On Vercel we avoid local file storage; this implementation supports EMBED content only.
+// POST /api/galleries
 export async function POST(req: NextRequest) {
   try {
     await connectDB();
@@ -73,32 +76,64 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, error: 'Not authorized' }, { status: 401 });
     }
 
-    // Accept both JSON and multipart/form-data to avoid JSON.parse errors from FormData submits.
-    const contentTypeHeader = req.headers.get('content-type') || '';
-    let body: any = {};
-    if (contentTypeHeader.includes('application/json')) {
-      body = await req.json();
-    } else {
-      const form = await req.formData();
-      form.forEach((value, key) => {
-        // Only keep strings; files are ignored in this lightweight serverless handler
-        if (typeof value === 'string') {
-          body[key] = value;
-        }
-      });
-    }
-
-    const { title, tags, contentType, embedCode, thumbnail } = body;
+    const formData = await req.formData();
+    const title = formData.get('title') as string;
+    const tagsInfo = formData.get('tags') as string;
+    const contentType = formData.get('contentType') as string;
+    const embedCode = formData.get('embedCode') as string;
 
     const galleryData: any = {
       title,
-      tags: typeof tags === 'string' ? tags.split(',').map((t: string) => t.trim()) : tags || [],
+      tags: tagsInfo ? tagsInfo.split(',').map((t: string) => t.trim()) : [],
       contentType,
       embedCode,
-      thumbnail
     };
 
-    // For simplicity on serverless, we only support embed + external thumbnail URLs.
+    // Ensure uploads directory exists
+    const uploadDir = path.join(process.cwd(), 'uploads');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
+    // Helper to save file
+    const saveFile = async (file: File): Promise<string> => {
+      const bytes = await file.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+      // Clean filename
+      const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+      const filename = `${uniqueSuffix}-${originalName}`;
+      const filePath = path.join(uploadDir, filename);
+
+      fs.writeFileSync(filePath, buffer);
+      return `uploads/${filename}`; // Return relative path
+    };
+
+    // 1. Handle Thumbnail
+    const thumbnailFile = formData.get('thumbnail') as File | null;
+    if (thumbnailFile && thumbnailFile.size > 0) {
+      galleryData.thumbnail = await saveFile(thumbnailFile);
+    }
+
+    // 2. Handle Gallery Images
+    // formData.getAll('images') returns an array of entries
+    const imageFiles = formData.getAll('images') as File[];
+    if (imageFiles && imageFiles.length > 0) {
+      const savedImages = [];
+      for (const file of imageFiles) {
+        if (file.size > 0) {
+          const url = await saveFile(file);
+          savedImages.push({ url, altText: title });
+        }
+      }
+      galleryData.images = savedImages;
+
+      // Fallback: if no thumbnail was uploaded, use first image
+      if (!galleryData.thumbnail && savedImages.length > 0) {
+        galleryData.thumbnail = savedImages[0].url;
+      }
+    }
+
     const gallery = await Gallery.create(galleryData);
 
     return NextResponse.json({ success: true, data: gallery }, { status: 201 });
